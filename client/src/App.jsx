@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import riceImg from './assets/rice.jpg';
-import sugarImg from './assets/sugar.jpg';
+import sugarImg from './assets/Sugar.jpg';
 import wheatFlourImg from './assets/wheat_flour.jpg';
 import Salt from './assets/salt.jpg';
 import CookingOil from './assets/cooking_oil.jpg';
