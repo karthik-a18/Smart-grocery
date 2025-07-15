@@ -21,6 +21,8 @@ import potatoImg from './assets/potatoes.jpg';
 import tomatoImg from './assets/tomatoes.jpg';
 import fallbackImg from './assets/fallback.jpg'; // if you use fallback from src too
 
+//const url='https://smart-grocery-app-eutp.onrender.com/';
+
 axios.defaults.withCredentials = true;
 
 const getImageForItem = (name) => {
@@ -63,18 +65,18 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/items')
+    axios.get('${import.meta.env.VITE_API_URL}/api/items')
       .then(res => setItems(res.data))
       .catch(err => console.error('Failed to load items', err));
 
-    axios.get('http://localhost:5000/api/auth/check-session')
+    axios.get('${import.meta.env.VITE_API_URL}/api/auth/check-session')
       .then((res) => setIsLoggedIn(res.data.loggedIn))
       .catch(() => setIsLoggedIn(false));
   }, []);
 
   const sendOtp = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/send-otp', { mobile });
+      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/send-otp', { mobile });
       setOtpSent(true);
     } catch (err) {
       alert('Failed to send OTP. Try again.');
@@ -87,7 +89,7 @@ export default function App() {
 
   const verifyOtp = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/verify-otp', { otp });
+      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/verify-otp', { otp });
       setStep('home');
       setIsLoggedIn(true);
     } catch (err) {
@@ -100,7 +102,7 @@ export default function App() {
 
   const addToCart = async (itemId) => {
   try {
-    await axios.post('http://localhost:5000/api/items/add-to-cart', {
+    await axios.post('${import.meta.env.VITE_API_URL}/api/items/add-to-cart', {
       itemId,
       quantity: 1,
     });
@@ -119,7 +121,7 @@ export default function App() {
 
 const incrementCartItem = async (itemId) => {
   try {
-    await axios.post('http://localhost:5000/api/items/add-to-cart', {
+    await axios.post('${import.meta.env.VITE_API_URL}/api/items/add-to-cart', {
       itemId,
       quantity: 1,
     });
@@ -137,7 +139,7 @@ const incrementCartItem = async (itemId) => {
 
 const decrementCartItem = async (itemId) => {
   try {
-    await axios.post('http://localhost:5000/api/items/remove-from-cart', {
+    await axios.post('${import.meta.env.VITE_API_URL}/api/items/remove-from-cart', {
       itemId,
       quantity: 1,
     });
@@ -164,7 +166,7 @@ const decrementCartItem = async (itemId) => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/items/cart');
+      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/items/cart');
       setCartItems(res.data);
       setShowCart(true);
       setComparison(null);
@@ -179,7 +181,7 @@ const decrementCartItem = async (itemId) => {
 
   const compareStores = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/items/compare');
+      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/items/compare');
       setComparison(res.data);
     } catch (err) {
       alert('Please login before comparing stores!');
@@ -190,7 +192,7 @@ const decrementCartItem = async (itemId) => {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout');
+      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/logout');
       setStep('home');
       setOtpSent(false);
       setOtp('');
