@@ -18,7 +18,8 @@ if (process.env.NODE_ENV === 'production') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined;
+const allowedOrigin = process.env.CORS_ORIGIN || vercelUrl || 'http://localhost:5173';
 app.use(
   cors({
     origin: allowedOrigin,
