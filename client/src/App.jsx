@@ -64,19 +64,21 @@ export default function App() {
   const [itemQuantities, setItemQuantities] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const apiBase = import.meta.env.VITE_API_URL || '';
+
   useEffect(() => {
-    axios.get('${import.meta.env.VITE_API_URL}/api/items')
+    axios.get(`${apiBase}/api/items`)
       .then(res => setItems(res.data))
       .catch(err => console.error('Failed to load items', err));
 
-    axios.get('${import.meta.env.VITE_API_URL}/api/auth/check-session')
+    axios.get(`${apiBase}/api/auth/check-session`)
       .then((res) => setIsLoggedIn(res.data.loggedIn))
       .catch(() => setIsLoggedIn(false));
   }, []);
 
   const sendOtp = async () => {
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/send-otp', { mobile });
+      await axios.post(`${apiBase}/api/auth/send-otp`, { mobile });
       setOtpSent(true);
     } catch (err) {
       alert('Failed to send OTP. Try again.');
@@ -89,7 +91,7 @@ export default function App() {
 
   const verifyOtp = async () => {
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/verify-otp', { otp });
+      await axios.post(`${apiBase}/api/auth/verify-otp`, { otp });
       setStep('home');
       setIsLoggedIn(true);
     } catch (err) {
@@ -102,7 +104,7 @@ export default function App() {
 
   const addToCart = async (itemId) => {
   try {
-    await axios.post('${import.meta.env.VITE_API_URL}/api/items/add-to-cart', {
+    await axios.post(`${apiBase}/api/items/add-to-cart`, {
       itemId,
       quantity: 1,
     });
@@ -121,7 +123,7 @@ export default function App() {
 
 const incrementCartItem = async (itemId) => {
   try {
-    await axios.post('${import.meta.env.VITE_API_URL}/api/items/add-to-cart', {
+    await axios.post(`${apiBase}/api/items/add-to-cart`, {
       itemId,
       quantity: 1,
     });
@@ -139,7 +141,7 @@ const incrementCartItem = async (itemId) => {
 
 const decrementCartItem = async (itemId) => {
   try {
-    await axios.post('${import.meta.env.VITE_API_URL}/api/items/remove-from-cart', {
+    await axios.post(`${apiBase}/api/items/remove-from-cart`, {
       itemId,
       quantity: 1,
     });
@@ -166,7 +168,7 @@ const decrementCartItem = async (itemId) => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/items/cart');
+      const res = await axios.get(`${apiBase}/api/items/cart`);
       setCartItems(res.data);
       setShowCart(true);
       setComparison(null);
@@ -181,7 +183,7 @@ const decrementCartItem = async (itemId) => {
 
   const compareStores = async () => {
     try {
-      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/items/compare');
+      const res = await axios.get(`${apiBase}/api/items/compare`);
       setComparison(res.data);
     } catch (err) {
       alert('Please login before comparing stores!');
