@@ -64,11 +64,16 @@ export default function App() {
   const [itemQuantities, setItemQuantities] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const apiBase = import.meta.env.VITE_API_URL || '';
+  const apiBase ="https://localhost:5000"
+;
 
   useEffect(() => {
     axios.get(`${apiBase}/api/items`)
-      .then(res => setItems(res.data))
+      .then(res => {
+        // Normalize so items is ALWAYS an array
+        const data = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.items) ? res.data.items : []);
+        setItems(data);
+      })
       .catch(err => console.error('Failed to load items', err));
 
     axios.get(`${apiBase}/api/auth/check-session`)
@@ -169,7 +174,9 @@ const decrementCartItem = async (itemId) => {
   const fetchCart = async () => {
     try {
       const res = await axios.get(`${apiBase}/api/items/cart`);
-      setCartItems(res.data);
+      // Normalize so cartItems is ALWAYS an array
+      const data = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.cart) ? res.data.cart : (Array.isArray(res.data?.items) ? res.data.items : []));
+      setCartItems(data);
       setShowCart(true);
       setComparison(null);
     } catch (err) {
@@ -193,23 +200,22 @@ const decrementCartItem = async (itemId) => {
   };
 
   const logout = async () => {
-    try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/auth/logout');
-      setStep('home');
-      setOtpSent(false);
-      setOtp('');
-      setMobile('');
-      setCartItems([]);
-      setComparison(null);
-      setShowCart(false);
-      setIsLoggedIn(false);
+  try {
+    await axios.post(`${apiBase}/api/auth/logout`);
+    setStep('home');
+    setOtpSent(false);
+    setOtp('');
+    setMobile('');
+    setCartItems([]);
+    setComparison(null);
+    setShowCart(false);
+    setIsLoggedIn(false);
 
-      window.location.reload();
-
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-  };
+    window.location.reload();
+  } catch (err) {
+    console.error('Logout failed:', err);
+  }
+};
 
   if (step === 'login') return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
